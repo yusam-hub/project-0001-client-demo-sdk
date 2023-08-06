@@ -10,11 +10,7 @@ abstract class BaseClientSdk
     const TOKEN_KEY_NAME = 'X-Token';
     protected CurlExtDebug $api;
     protected bool $isDebugging;
-    protected ?int $appId = null;
-    protected ?int $userId = null;
-    protected ?string $deviceUuid = null;
-    protected ?string $publicKeyHash = null;
-    protected ?string $privateKey = null;
+    protected ?string $accessToken = null;
     public function __construct(array $config = [])
     {
         if (!isset($config['baseUrl'])) {
@@ -25,21 +21,6 @@ abstract class BaseClientSdk
         }
         if (!isset($config['storageLogFile'])) {
             throw new \RuntimeException("storageLogFile not exists in config");
-        }
-        if (!isset($config['appId'])) {
-            throw new \RuntimeException("appId not exists in config");
-        }
-        if (!isset($config['userId'])) {
-            throw new \RuntimeException("userId not exists in config");
-        }
-        if (!isset($config['deviceUuid'])) {
-            throw new \RuntimeException("deviceUuid not exists in config");
-        }
-        if (!isset($config['publicKeyHash'])) {
-            throw new \RuntimeException("publicKeyHash not exists in config");
-        }
-        if (!isset($config['privateKey'])) {
-            throw new \RuntimeException("privateKey not exists in config");
         }
         foreach($config as $k => $v) {
             if (property_exists($this, $k)) {
@@ -61,94 +42,19 @@ abstract class BaseClientSdk
     }
 
     /**
-     * @return int|null
-     */
-    public function getAppId(): ?int
-    {
-        return $this->appId;
-    }
-
-    /**
-     * @param int|null $appId
-     */
-    public function setAppId(?int $appId): void
-    {
-        $this->appId = $appId;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getUserId(): ?int
-    {
-        return $this->userId;
-    }
-
-    /**
-     * @param int|null $userId
-     */
-    public function setUserId(?int $userId): void
-    {
-        $this->userId = $userId;
-    }
-
-    /**
      * @return string|null
      */
-    public function getDeviceUuid(): ?string
+    public function getAccessToken(): ?string
     {
-        return $this->deviceUuid;
+        return $this->accessToken;
     }
 
     /**
-     * @param string|null $deviceUuid
+     * @param string|null $accessToken
      */
-    public function setDeviceUuid(?string $deviceUuid): void
+    public function setAccessToken(?string $accessToken): void
     {
-        $this->deviceUuid = $deviceUuid;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getPublicKeyHash(): ?string
-    {
-        return $this->publicKeyHash;
-    }
-
-    /**
-     * @param string|null $publicKeyHash
-     */
-    public function setPublicKeyHash(?string $publicKeyHash): void
-    {
-        $this->publicKeyHash = $publicKeyHash;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getPrivateKey(): ?string
-    {
-        return $this->privateKey;
-    }
-
-    /**
-     * @param string|null $privateKey
-     */
-    public function setPrivateKey(?string $privateKey): void
-    {
-        $this->privateKey = $privateKey;
-    }
-
-    protected function generateToken(): string
-    {
-        return JwtDemoTokenHelper::toJwt(
-            $this->appId,
-            $this->userId,
-            $this->deviceUuid,
-            $this->publicKeyHash,
-            $this->privateKey
-        );
+        $this->accessToken = $accessToken;
     }
 
     /**
@@ -170,7 +76,7 @@ abstract class BaseClientSdk
         ];
 
         if ($authorize) {
-            $headers[self::TOKEN_KEY_NAME] = $this->generateToken();
+            $headers[self::TOKEN_KEY_NAME] = (string) $this->getAccessToken();
         }
 
         if ($requestMethod !== $this->api::METHOD_GET) {
