@@ -9,7 +9,7 @@ class ClientDemoSdkTest extends \PHPUnit\Framework\TestCase
     public function testDefault()
     {
         $clientDemoSdk = new ClientDemoSdk(Config::getConfig('demo-sdk'));
-        $home = $clientDemoSdk->getHome();
-        $this->assertTrue(is_array($home));
+        $v1Test = $clientDemoSdk->getApiV1Test();
+        $this->assertTrue(is_array($v1Test));
     }
 }
