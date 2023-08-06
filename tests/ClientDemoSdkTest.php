@@ -11,6 +11,5 @@ class ClientDemoSdkTest extends \PHPUnit\Framework\TestCase
         $clientDemoSdk = new ClientDemoSdk(Config::getConfig('demo-sdk'));
         $home = $clientDemoSdk->getHome();
         $this->assertTrue(is_array($home));
-
     }
 }
