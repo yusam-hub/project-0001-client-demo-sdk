@@ -3,7 +3,6 @@
 namespace YusamHub\Project0001ClientDemoSdk;
 
 use YusamHub\CurlExt\CurlExtDebug;
-use YusamHub\Project0001ClientDemoSdk\Tokens\JwtDemoTokenHelper;
 
 abstract class BaseClientSdk
 {
