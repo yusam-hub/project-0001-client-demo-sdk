@@ -9,7 +9,7 @@ abstract class BaseClientSdk
     const TOKEN_KEY_NAME = 'X-Token';
     protected CurlExtDebug $api;
     protected bool $isDebugging;
-    protected ?string $accessToken = null;
+    protected ?string $jwtAppUserToken = null;
     public function __construct(array $config = [])
     {
         if (!isset($config['baseUrl'])) {
@@ -43,17 +43,17 @@ abstract class BaseClientSdk
     /**
      * @return string|null
      */
-    public function getAccessToken(): ?string
+    public function getJwtAppUserToken(): ?string
     {
-        return $this->accessToken;
+        return $this->jwtAppUserToken;
     }
 
     /**
-     * @param string|null $accessToken
+     * @param string|null $jwtAppUserToken
      */
-    public function setAccessToken(?string $accessToken): void
+    public function setJwtAppUserToken(?string $jwtAppUserToken): void
     {
-        $this->accessToken = $accessToken;
+        $this->jwtAppUserToken = $jwtAppUserToken;
     }
 
     /**
@@ -75,7 +75,7 @@ abstract class BaseClientSdk
         ];
 
         if ($authorize) {
-            $headers[self::TOKEN_KEY_NAME] = (string) $this->getAccessToken();
+            $headers[self::TOKEN_KEY_NAME] = (string) $this->getJwtAppUserToken();
         }
 
         if ($requestMethod !== $this->api::METHOD_GET) {
