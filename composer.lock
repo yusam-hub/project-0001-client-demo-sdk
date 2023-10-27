@@ -382,7 +382,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yusam-hub/project-0001-client-auth-sdk",
-                "reference": "06228b6994d61e548f769f08063eb4b27b2810bd"
+                "reference": "97cdbd27c7f5605f69ccc9ca8721356b7f80004d"
             },
             "require": {
                 "firebase/php-jwt": "^6.0",
@@ -407,7 +407,7 @@
                 "files": []
             },
             "description": "yusam-hub/project-0001-client-auth-sdk",
-            "time": "2023-10-26T00:52:15+00:00"
+            "time": "2023-10-27T02:25:50+00:00"
         }
     ],
     "packages-dev": [

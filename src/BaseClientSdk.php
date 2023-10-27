@@ -9,7 +9,11 @@ abstract class BaseClientSdk
     const TOKEN_KEY_NAME = 'X-Token';
     protected CurlExtDebug $api;
     protected bool $isDebugging;
-    protected ?string $jwtAppUserToken = null;
+    protected int $appId;
+    protected int $userId;
+    protected string $deviceUuid;
+    protected string $privateKey;
+
     public function __construct(array $config = [])
     {
         if (!isset($config['baseUrl'])) {
@@ -17,6 +21,18 @@ abstract class BaseClientSdk
         }
         if (!isset($config['isDebugging'])) {
             throw new \RuntimeException("isDebugging not exists in config");
+        }
+        if (!isset($config['appId'])) {
+            throw new \RuntimeException("appId not exists in config");
+        }
+        if (!isset($config['userId'])) {
+            throw new \RuntimeException("userId not exists in config");
+        }
+        if (!isset($config['deviceUuid'])) {
+            throw new \RuntimeException("deviceUuid not exists in config");
+        }
+        if (!isset($config['privateKey'])) {
+            throw new \RuntimeException("privateKey not exists in config");
         }
         if (!isset($config['storageLogFile'])) {
             throw new \RuntimeException("storageLogFile not exists in config");
@@ -40,20 +56,39 @@ abstract class BaseClientSdk
         return $this->isDebugging;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getJwtAppUserToken(): ?string
+    public function getAppId(): int
     {
-        return $this->jwtAppUserToken;
+        return $this->appId;
     }
 
-    /**
-     * @param string|null $jwtAppUserToken
-     */
-    public function setJwtAppUserToken(?string $jwtAppUserToken): void
+    public function getUserId(): int
     {
-        $this->jwtAppUserToken = $jwtAppUserToken;
+        return $this->userId;
+    }
+
+    public function getDeviceUuid(): string
+    {
+        return $this->deviceUuid;
+    }
+
+    public function getPrivateKey(): string
+    {
+        return $this->privateKey;
+    }
+
+
+    protected function generateToken(string $method, array|string $content): string
+    {
+        if (is_array($content)) {
+            if ($method === $this->api::METHOD_GET) {
+                $content = http_build_query($content);
+            } else {
+                $content = json_encode($content);
+            }
+        } elseif (!is_string($content)) {
+            throw new \RuntimeException("Invalid content, require string");
+        }
+        return $content;
     }
 
     /**
@@ -75,7 +110,7 @@ abstract class BaseClientSdk
         ];
 
         if ($authorize) {
-            $headers[self::TOKEN_KEY_NAME] = (string) $this->getJwtAppUserToken();
+            $headers[self::TOKEN_KEY_NAME] = $this->generateToken($requestMethod, $requestParams);
         }
 
         if ($requestMethod !== $this->api::METHOD_GET) {
